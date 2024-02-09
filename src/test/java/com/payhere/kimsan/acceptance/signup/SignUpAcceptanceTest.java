@@ -24,9 +24,29 @@ class SignUpAcceptanceTest {
         // given
         final String name = "홍길동";
         final String regNo = "860824-1655068";
-        final String userId = "gildong";
-        var userData = createUserData(name, regNo,
-            userId);
+        final String userId = "010-9352-2209";
+        var userData = createUserData(name, regNo, userId);
+
+        // when
+        회원가입(userData);
+        var response = 회원가입(userData);
+
+        // then
+        assertStatusCode(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @DisplayName("아이디가 휴대폰 번호 형식이 아닌 경우 경우 회원 가입에 실패한다.")
+    @ParameterizedTest
+    @CsvSource(value = {
+        "홍길동,860824-1655068,u1",
+        "김둘리,921108-1582816,010123",
+        "마징가,880601-2455116,0109999-123a",
+        "배지터,910411-1656116,a010939298172",
+        "손오공,820326-2715702,아무것도아닌 아이디",
+    })
+    void fail_signup_invalid_userId(String name, String regNo, String userId)  {
+        // given
+        var userData = createUserData(name, regNo, userId);
 
         // when
         회원가입(userData);
@@ -38,17 +58,16 @@ class SignUpAcceptanceTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-        "홍길동,860824-1655068,u1",
-        "김둘리,921108-1582816,u2",
-        "마징가,880601-2455116,u3",
-        "배지터,910411-1656116,u4",
-        "손오공,820326-2715702,u5",
+        "홍길동,860824-1655068,010-9352-2209",
+        "김둘리,921108-1582816,010-1234-5678",
+        "마징가,880601-2455116,010-3344-5678",
+        "배지터,910411-1656116,010-3124-2143",
+        "손오공,820326-2715702,010-9340-8289",
     })
     @DisplayName("회원 가입에 성공한다.")
     void success_signup(String name, String regNo, String userId) {
         // given
-        var userData = createUserData(name, regNo,
-            userId);
+        var userData = createUserData(name, regNo, userId);
 
         // when
         var response = 회원가입(userData);

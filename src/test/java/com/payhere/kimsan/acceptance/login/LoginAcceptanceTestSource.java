@@ -23,7 +23,7 @@ public class LoginAcceptanceTestSource {
     public static ExtractableResponse<Response> 사전_회원가입() {
         final String name = "홍길동";
         final String regNo = "860824-1655068";
-        final String userId = "gildong";
+        final String userId = "010-9352-2209";
 
         HashMap<String, String> userData = SignUpAcceptanceTestSource.createUserData(name, regNo,
             userId);

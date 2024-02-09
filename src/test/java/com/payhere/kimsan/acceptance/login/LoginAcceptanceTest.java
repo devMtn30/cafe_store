@@ -45,9 +45,9 @@ class LoginAcceptanceTest {
     @DisplayName("비밀번호가 일치하지 않으면 로그인에 실패한다.")
     @ParameterizedTest
     @CsvSource(value = {
-        "gildong,hi",
-        "gildong,hello",
-        "gildong,kkkk",
+        "010-9352-2209,hi",
+        "010-9352-2209,hello",
+        "010-9352-2209,kkkk",
     })
     void fail_login_password(String userId, String password) {
         // given
@@ -63,7 +63,7 @@ class LoginAcceptanceTest {
     @Test
     @DisplayName("로그인에 성공한다.")
     void success_login() {
-        final String id = "gildong";
+        final String id = "010-9352-2209";
         final String password = "123";
         // given
         var loginParams = 로그인_계정_생성(id, password);
