@@ -1,7 +1,9 @@
 package com.payhere.kimsan.user.domain;
 
+import com.payhere.kimsan.product.domain.Products;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +33,9 @@ public class User {
     private String password;
     private String name;
     private String regNo;
+
+    @Embedded
+    private final Products sections = new Products();
 
     @Override
     public String toString() {
