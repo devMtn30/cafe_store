@@ -10,11 +10,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class JwtService {
@@ -25,14 +29,13 @@ public class JwtService {
     @Value("${jwt.expiration_time}")
     Long jwtExpirationMs;
 
+    private final RedisTemplate<String, Object> redisTemplate;
+
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     public String generateToken(UserDetails userDetails) {
-        log.info("jwtSecretKey : {}", jwtSecretKey);
-        log.info("jwtExpirationMs : {}", jwtExpirationMs);
-        log.info("userDetails : {}", userDetails);
         return generateToken(new HashMap<>(), userDetails);
     }
 
@@ -50,6 +53,11 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String userName = extractUserName(token);
         return (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
+    }
+
+    public boolean isUserTokenExpired(UserDetails userDetails) {
+        Object token = redisTemplate.opsForValue().get(userDetails.getUsername());
+        return ObjectUtils.isEmpty(token);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {

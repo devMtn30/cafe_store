@@ -2,6 +2,7 @@ package com.payhere.kimsan.common.config;
 
 import com.payhere.kimsan.common.filter.JwtAuthenticationFilter;
 import com.payhere.kimsan.user.application.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(HttpMethod.POST, "/signup", "/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/auth/signup", "/auth/login").permitAll()
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider())

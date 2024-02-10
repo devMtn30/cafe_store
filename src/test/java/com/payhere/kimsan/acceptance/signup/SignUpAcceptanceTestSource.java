@@ -23,7 +23,7 @@ public class SignUpAcceptanceTestSource {
             .given().log().all()
             .body(userData)
             .contentType(ContentType.JSON)
-            .when().post("/signup")
+            .when().post("/auth/signup")
             .then().log().all().extract();
         return response;
     }

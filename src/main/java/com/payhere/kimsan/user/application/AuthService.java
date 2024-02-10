@@ -10,8 +10,10 @@ import com.payhere.kimsan.user.application.dto.SignInRequest;
 import com.payhere.kimsan.user.application.dto.SignUpRequest;
 import com.payhere.kimsan.user.domain.CustomUserDetails;
 import com.payhere.kimsan.user.domain.User;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
@@ -30,12 +32,27 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final AesBytesEncryptor encryptor;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Transactional
     public void createUser(SignUpRequest request) {
         validateUser(request);
         User user = getUser(request);
         userService.save(user);
+    }
+
+    public JwtAuthenticationResponse signin(SignInRequest request) {
+        authenticateUser(request);
+        User user = userService.findByUserId(request.userId())
+                               .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
+        String jwt = jwtService.generateToken(new CustomUserDetails(user));
+        saveToken(user.getUserId(), jwt);
+
+        return JwtAuthenticationResponse.builder().accessToken(jwt).build();
+    }
+
+    public void logout(String userId) {
+        redisTemplate.delete(userId);
     }
 
     private void validateUser(SignUpRequest request) {
@@ -54,13 +71,8 @@ public class AuthService {
                    .build();
     }
 
-    public JwtAuthenticationResponse signin(SignInRequest request) {
-        authenticateUser(request);
-        User user = userService.findByUserId(request.userId())
-                               .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
-        String jwt = jwtService.generateToken(new CustomUserDetails(user));
-        
-        return JwtAuthenticationResponse.builder().accessToken(jwt).build();
+    private void saveToken(String userId, String jwt) {
+        redisTemplate.opsForValue().set(userId, jwt, 60, TimeUnit.MINUTES);
     }
 
     private void authenticateUser(SignInRequest request) {

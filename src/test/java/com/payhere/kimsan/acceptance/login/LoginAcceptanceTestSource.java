@@ -1,5 +1,7 @@
 package com.payhere.kimsan.acceptance.login;
 
+import static com.payhere.kimsan.acceptance.signup.SignUpAcceptanceTestSource.*;
+
 import com.payhere.kimsan.acceptance.signup.SignUpAcceptanceTestSource;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -15,7 +17,7 @@ public class LoginAcceptanceTestSource {
             .given().log().all()
             .body(userData)
             .contentType(ContentType.JSON)
-            .when().post("/login")
+            .when().post("/auth/login")
             .then().log().all().extract();
         return response;
     }
@@ -25,9 +27,9 @@ public class LoginAcceptanceTestSource {
         final String regNo = "860824-1655068";
         final String userId = "010-9352-2209";
 
-        HashMap<String, String> userData = SignUpAcceptanceTestSource.createUserData(name, regNo,
+        HashMap<String, String> userData = createUserData(name, regNo,
             userId);
-        ExtractableResponse<Response> response = SignUpAcceptanceTestSource.회원가입(userData);
+        ExtractableResponse<Response> response = 회원가입(userData);
 
         return response;
     }
