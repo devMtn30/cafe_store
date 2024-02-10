@@ -36,6 +36,19 @@ public class ProductAcceptanceTestSource {
         );
     }
 
+    public static AddProductRequest 상품생성(String 공통문자) {
+        return new AddProductRequest(
+            공통문자,
+            1500.00,
+            1000.00,
+            공통문자,
+            공통문자,
+            공통문자,
+            LocalDate.of(2024, 12, 31),
+            Size.LARGE
+        );
+    }
+
     public static ExtractableResponse<Response> 상품수정_요청(String token, UpdateProductRequest request,
         Long productId) {
         ExtractableResponse<Response> response = RestAssured
@@ -68,6 +81,17 @@ public class ProductAcceptanceTestSource {
             .header("Authorization", token)
             .contentType(ContentType.JSON)
             .when().delete("/product/" + productId)
+            .then().log().all().extract();
+        return response;
+    }
+
+
+    public static ExtractableResponse<Response> 상품목록조회_요청(String token, Long page) {
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .when().get("/product/" + page)
             .then().log().all().extract();
         return response;
     }

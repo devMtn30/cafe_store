@@ -6,11 +6,13 @@ import static com.payhere.kimsan.acceptance.login.LoginAcceptanceTestSource.사�
 import static com.payhere.kimsan.acceptance.logout.LogoutAcceptanceTestSource.사전_로그인;
 import static com.payhere.kimsan.acceptance.product.ProductAcceptanceTestSource.*;
 import static com.payhere.kimsan.acceptance.product.ProductAcceptanceTestSource.상품등록_요청;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import com.payhere.kimsan.acceptance.AcceptanceTest;
-import com.payhere.kimsan.product.application.dto.UpdateProductRequest;
+import com.payhere.kimsan.product.application.dto.GetProductListResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,6 +70,26 @@ class ProductAcceptanceTest {
 
         // then
         assertStatusCode(response, HttpStatus.NO_CONTENT);
+    }
+    @Test
+    @DisplayName("상품 목록조회 테스트")
+    void success_products_find() {
+        // given
+        Stream.iterate(0, i -> i + 1)
+              .limit(20)
+              .forEach(i -> 상품등록_요청(token, 상품생성("테스트" + i)));
+
+        // when
+        final Long page = 10L;
+        var response = 상품목록조회_요청(token, page);
+
+        // then
+        assertStatusCode(response, HttpStatus.OK);
+        assertThat(응답데이터크기(response)).isEqualTo(page);
+    }
+
+    private int 응답데이터크기(ExtractableResponse<Response> response) {
+        return response.jsonPath().getList("data", GetProductListResponse.class).size();
     }
 
 }
