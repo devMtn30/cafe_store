@@ -45,8 +45,8 @@ class ProductAcceptanceTest {
     @DisplayName("상품 부분수정 테스트")
     void success_product_update() {
         // given
-        ExtractableResponse<Response> createResponse = 상품등록_요청(token, 상품생성());
-        Long productId = getIdFromResponse(createResponse);
+        var createResponse = 상품등록_요청(token, 상품생성());
+        final Long productId = getIdFromResponse(createResponse);
         var request = 상품수정생성();
 
         // when
@@ -54,6 +54,20 @@ class ProductAcceptanceTest {
 
         // then
         assertStatusCode(response, HttpStatus.OK);
+    }
+
+    @Test
+    @DisplayName("상품 삭제 테스트")
+    void success_product_delete() {
+        // given
+        var createResponse = 상품등록_요청(token, 상품생성());
+        final Long productId = getIdFromResponse(createResponse);
+
+        // when
+        var response = 상품삭제_요청(token, productId);
+
+        // then
+        assertStatusCode(response, HttpStatus.NO_CONTENT);
     }
 
 }

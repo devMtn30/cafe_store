@@ -61,4 +61,14 @@ public class ProductAcceptanceTestSource {
         );
 
     }
+
+    public static ExtractableResponse<Response> 상품삭제_요청(String token, Long productId) {
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .when().delete("/product/" + productId)
+            .then().log().all().extract();
+        return response;
+    }
 }
