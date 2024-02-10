@@ -2,14 +2,12 @@ package com.payhere.kimsan.user.domain;
 
 import com.payhere.kimsan.product.domain.Product;
 import com.payhere.kimsan.product.domain.Products;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,5 +49,14 @@ public class User {
 
     public void addProduct(Product product) {
         products.addProduct(product);
+    }
+
+    public Long getLastAddProductId() {
+        Product product = products.getLastProduct();
+        return product.getId();
+    }
+
+    public void updateProduct(Product product) {
+        products.updateProduct(product);
     }
 }

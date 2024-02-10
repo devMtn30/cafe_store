@@ -12,7 +12,10 @@ public enum ErrorCode {
     DUPLICATED_ID(HttpStatus.BAD_REQUEST, "ACCOUNT-002", "중복되는 아이디 입니다."),
     NOT_ALLOW_USER(HttpStatus.BAD_REQUEST, "ACCOUNT-003", "허용되지 않은 사용자 입니다."),
     INVALID_USER_INFO(HttpStatus.BAD_REQUEST, "ACCOUNT-004", "아이디 혹은 비밀번호가 잘못되었습니다"),
-    PRODUCT_NOT_NULL(HttpStatus.BAD_REQUEST, "PRODUCT-001", "상품 등록시 null을 등록할 수 없습니다.");
+    PRODUCT_NOT_NULL(HttpStatus.BAD_REQUEST, "PRODUCT-001", "상품 등록시 null을 등록할 수 없습니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT-002", "상품을 찾을 수 없습니다."),
+    PRODUCTS_NOT_EXIST(HttpStatus.NOT_FOUND, "PRODUCT-003", "사용자가 등록한 적 없는 상품입니다.")
+    ;
 
 
     private final HttpStatus httpStatus;  // HttpStatus

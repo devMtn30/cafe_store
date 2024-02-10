@@ -2,8 +2,6 @@ package com.payhere.kimsan.product.application.dto;
 
 import com.payhere.kimsan.product.domain.Product;
 import com.payhere.kimsan.product.domain.Size;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public record UpdateProductRequest(
@@ -17,8 +15,9 @@ public record UpdateProductRequest(
     Size size
 ) {
 
-    public Product toEntity() {
+    public Product toEntity(Long productId) {
         return Product.builder().
+                id(productId).
                 category(category).
                 price(price).
                 cost(cost).

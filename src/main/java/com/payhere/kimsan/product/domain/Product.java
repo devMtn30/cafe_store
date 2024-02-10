@@ -8,12 +8,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
+@Setter(AccessLevel.PRIVATE)
+@DynamicUpdate
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -51,5 +58,24 @@ public class Product {
         this.barcode = barcode;
         this.expirationDate = expirationDate;
         this.size = size;
+    }
+
+
+    public void update(Product product) {
+        updateIfNotNull(product::getCategory, (p, v) -> this.setCategory(v));
+        updateIfNotNull(product::getPrice, (p, v) -> this.setPrice(v));
+        updateIfNotNull(product::getCost, (p, v) -> this.setCost(v));
+        updateIfNotNull(product::getName, (p, v) -> this.setName(v));
+        updateIfNotNull(product::getDescription, (p, v) -> this.setDescription(v));
+        updateIfNotNull(product::getBarcode, (p, v) -> this.setBarcode(v));
+        updateIfNotNull(product::getExpirationDate, (p, v) -> this.setExpirationDate(v));
+        updateIfNotNull(product::getSize, (p, v) -> this.setSize(v));
+    }
+
+    private <T> void updateIfNotNull(Supplier<T> getter, BiConsumer<Product, T> setter) {
+        T value = getter.get();
+        if (value != null) {
+            setter.accept(this, value);
+        }
     }
 }
