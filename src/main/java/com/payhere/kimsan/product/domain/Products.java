@@ -50,4 +50,9 @@ public class Products {
         }
         return productList.get(productList.size() - 1);
     }
+
+    public void removeProduct(Product product) {
+        Product matchProduct = getMatchProduct(product);
+        productList.remove(matchProduct);
+    }
 }

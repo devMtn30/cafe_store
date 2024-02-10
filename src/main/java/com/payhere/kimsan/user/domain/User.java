@@ -59,4 +59,8 @@ public class User {
     public void updateProduct(Product product) {
         products.updateProduct(product);
     }
+
+    public void removeProduct(Product product) {
+        products.removeProduct(product);
+    }
 }

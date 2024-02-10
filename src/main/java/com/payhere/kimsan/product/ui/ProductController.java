@@ -1,6 +1,7 @@
 package com.payhere.kimsan.product.ui;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 
 import com.payhere.kimsan.common.login.LoginUser;
@@ -12,6 +13,7 @@ import com.payhere.kimsan.user.domain.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,5 +45,15 @@ public class ProductController {
 
         return ResponseEntity.status(OK)
                              .body(productService.getProductResponse(userId));
+    }
+
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ProductResponse> deleteProduct(@LoginUser CustomUserDetails userDetails,
+        @PathVariable Long productId) {
+        String userId = userDetails.getUsername();
+        productService.deleteProduct(userId, productId);
+
+        return ResponseEntity.status(NO_CONTENT).build();
     }
 }

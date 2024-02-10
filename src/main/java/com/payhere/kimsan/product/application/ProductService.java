@@ -15,33 +15,39 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ProductService {
 
     private final UserRepository userRepository;
 
-    @Transactional
     public void saveProduct(final AddProductRequest request, final String userId) {
         final Product product = request.toEntity();
-        User user = userRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
+        User user = getUser(userId);
 
         user.addProduct(product);
     }
 
-    @Transactional
     public void updateProduct(final UpdateProductRequest request, final String userId, final Long productId) {
         final Product product = request.toEntity(productId);
-        User user = userRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
+        User user = getUser(userId);
 
         user.updateProduct(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductResponse getProductResponse(final String userId) {
-        User user = userRepository.findByUserId(userId)
-                                  .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
+        User user = getUser(userId);
 
         return new ProductResponse(user.getLastAddProductId());
+    }
+
+    public void deleteProduct(final String userId, final Long productId) {
+        User user = getUser(userId);
+        Product target = Product.builder().id(productId).build();
+        user.removeProduct(target);
+    }
+    private User getUser(String userId) {
+        return userRepository.findByUserId(userId)
+                             .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
     }
 }
