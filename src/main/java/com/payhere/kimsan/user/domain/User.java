@@ -1,5 +1,6 @@
 package com.payhere.kimsan.user.domain;
 
+import com.payhere.kimsan.product.domain.Product;
 import com.payhere.kimsan.product.domain.Products;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -35,7 +36,7 @@ public class User {
     private String regNo;
 
     @Embedded
-    private final Products sections = new Products();
+    private final Products products = new Products();
 
     @Override
     public String toString() {
@@ -48,4 +49,7 @@ public class User {
             '}';
     }
 
+    public void addProduct(Product product) {
+        products.addProduct(product);
+    }
 }

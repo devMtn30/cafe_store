@@ -41,6 +41,15 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private Size size;
 
-
-    // getters and setters
+    public Product(String category, Double price, Double cost, String name, String description,
+        String barcode, LocalDate expirationDate, Size size) {
+        this.category = category;
+        this.price = price;
+        this.cost = cost;
+        this.name = name;
+        this.description = description;
+        this.barcode = barcode;
+        this.expirationDate = expirationDate;
+        this.size = size;
+    }
 }

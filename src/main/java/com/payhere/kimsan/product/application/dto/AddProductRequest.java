@@ -1,5 +1,6 @@
 package com.payhere.kimsan.product.application.dto;
 
+import com.payhere.kimsan.product.domain.Product;
 import com.payhere.kimsan.product.domain.Size;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,7 +14,18 @@ public record AddProductRequest(
     @NotBlank String description,
     @NotBlank String barcode,
     @NotNull LocalDate expirationDate,
-    @NotBlank Size size
+    @NotNull Size size
 ) {
 
+    public Product toEntity() {
+        return Product.builder().
+                category(category).
+                price(price).
+                cost(cost).
+                name(name).
+                description(description).
+                barcode(barcode).
+                expirationDate(expirationDate).
+                size(size).build();
+    }
 }

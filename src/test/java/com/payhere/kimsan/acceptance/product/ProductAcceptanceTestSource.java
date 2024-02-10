@@ -15,6 +15,7 @@ public class ProductAcceptanceTestSource {
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header("Authorization", token)
+            .body(request)
             .contentType(ContentType.JSON)
             .when().post("/product")
             .then().log().all().extract();
