@@ -1,4 +1,4 @@
-package com.payhere.kimsan.acceptance.product;
+package com.payhere.kimsan.product.application.dto;
 
 import com.payhere.kimsan.product.domain.Size;
 import jakarta.validation.constraints.NotBlank;
