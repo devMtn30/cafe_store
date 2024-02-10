@@ -1,6 +1,7 @@
 package com.payhere.kimsan.acceptance.product;
 
 import com.payhere.kimsan.product.application.dto.AddProductRequest;
+import com.payhere.kimsan.product.application.dto.UpdateProductRequest;
 import com.payhere.kimsan.product.domain.Size;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -33,5 +34,31 @@ public class ProductAcceptanceTestSource {
             LocalDate.of(2024, 12, 31),
             Size.LARGE
         );
+    }
+
+    public static ExtractableResponse<Response> 상품수정_요청(String token, UpdateProductRequest request,
+        Long productId) {
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .body(request)
+            .contentType(ContentType.JSON)
+            .when().patch("/product/" + productId)
+            .then().log().all().extract();
+        return response;
+    }
+
+    public static UpdateProductRequest 상품수정생성() {
+        return new UpdateProductRequest(
+            null,
+            null,
+            null,
+            "iPhone15",
+            "Update smartPhone",
+            "9876554213",
+            null,
+            null
+        );
+
     }
 }
