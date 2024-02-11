@@ -10,6 +10,7 @@ import com.payhere.kimsan.common.login.LoginUser;
 import com.payhere.kimsan.product.application.ProductService;
 import com.payhere.kimsan.product.application.dto.AddProductRequest;
 import com.payhere.kimsan.product.application.dto.GetProductListResponse;
+import com.payhere.kimsan.product.application.dto.GetProductResponse;
 import com.payhere.kimsan.product.application.dto.ProductResponse;
 import com.payhere.kimsan.product.application.dto.UpdateProductRequest;
 import com.payhere.kimsan.user.domain.CustomUserDetails;
@@ -71,6 +72,15 @@ public class ProductController {
         @RequestParam Long cursor, @RequestParam int page) {
         PageRequest pageable = PageRequest.of(page, PAGE_DEFAULT_SIZE.getValue(), Sort.by("id").descending());
         var response = productService.findProductsByPage(userDetails.getUsername(), pageable, cursor);
+
+        return new ResponseEntity<>(new CustomResponse<>(OK, response), OK);
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<CustomResponse<GetProductResponse>> showProduct(@LoginUser CustomUserDetails userDetails,
+        @PathVariable Long productId) {
+        String userId = userDetails.getUsername();
+        GetProductResponse response = productService.findProduct(userId, productId);
 
         return new ResponseEntity<>(new CustomResponse<>(OK, response), OK);
     }

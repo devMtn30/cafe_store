@@ -33,7 +33,7 @@ public class Products {
         matchProduct.update(product);
     }
 
-    private Product getMatchProduct(Product product) {
+    public Product getMatchProduct(Product product) {
         return productList.stream()
                           .filter(isMatchProduct(product))
                           .findFirst()

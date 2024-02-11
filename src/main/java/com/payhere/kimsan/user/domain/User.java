@@ -79,4 +79,8 @@ public class User {
         }
         return products.getList(start, end);
     }
+
+    public Product findProduct(Long productId) {
+        return products.getMatchProduct(Product.builder().id(productId).build());
+    }
 }

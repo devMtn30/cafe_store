@@ -71,6 +71,14 @@ public class ProductService {
         return new GetProductListResponse(products, productSlice.hasNext());
     }
 
+    @Transactional(readOnly = true)
+    public GetProductResponse findProduct(final String userId, Long productId) {
+        User user = getUser(userId);
+        Product product = user.findProduct(productId);
+
+        return GetProductResponse.from(product);
+    }
+
     private static List<GetProductResponse> getGetProductResponses(Slice<Product> productSlice) {
         return productSlice.getContent().stream()
                            .map(GetProductResponse::from)
