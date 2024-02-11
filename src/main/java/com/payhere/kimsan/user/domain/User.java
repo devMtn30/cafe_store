@@ -1,5 +1,8 @@
 package com.payhere.kimsan.user.domain;
 
+import static com.payhere.kimsan.common.exception.ErrorCode.PRODUCTS_NOT_EXIST;
+
+import com.payhere.kimsan.common.exception.CustomException;
 import com.payhere.kimsan.product.domain.Product;
 import com.payhere.kimsan.product.domain.Products;
 import jakarta.persistence.Column;
@@ -9,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,6 +53,8 @@ public class User {
 
     public void addProduct(Product product) {
         products.addProduct(product);
+        product.setUser(this);
+
     }
 
     public Long getLastAddProductId() {
@@ -62,5 +68,15 @@ public class User {
 
     public void removeProduct(Product product) {
         products.removeProduct(product);
+        product.setUser(null);
+    }
+
+    public List<Product> getProducts(int page, int size) {
+        int start = (page - 1) * size;
+        int end = Math.min(start + size, products.getSize());
+        if (start > end) {
+            throw new CustomException(PRODUCTS_NOT_EXIST);
+        }
+        return products.getList(start, end);
     }
 }

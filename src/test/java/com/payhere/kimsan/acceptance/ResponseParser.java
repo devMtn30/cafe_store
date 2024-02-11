@@ -6,7 +6,7 @@ import io.restassured.response.Response;
 public class ResponseParser {
 
     public static Long getIdFromResponse(final ExtractableResponse<Response> response) {
-        return response.jsonPath().getLong("id");
+        return response.jsonPath().getLong("data.id");
     }
 
     public static String getTokenFromResponse(final ExtractableResponse<Response> response) {

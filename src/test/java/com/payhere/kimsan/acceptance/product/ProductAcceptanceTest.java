@@ -78,18 +78,24 @@ class ProductAcceptanceTest {
         Stream.iterate(0, i -> i + 1)
               .limit(20)
               .forEach(i -> 상품등록_요청(token, 상품생성("테스트" + i)));
+        var lastResponse = 상품등록_요청(token, 상품생성());
+        Long lastAddedProductId = getIdFromResponse(lastResponse);
 
         // when
-        final Long page = 10L;
-        var response = 상품목록조회_요청(token, page);
+        final int page = 0;
+        var response = 상품목록조회_요청(token, 상품목록_파라미터생성(lastAddedProductId, page));
 
         // then
         assertStatusCode(response, HttpStatus.OK);
-        assertThat(응답데이터크기(response)).isEqualTo(page);
+        assertThat(응답데이터크기(response)).isEqualTo(10);
+        assertThat(응답데이터_다음여부(response)).isEqualTo(true);
     }
 
     private int 응답데이터크기(ExtractableResponse<Response> response) {
-        return response.jsonPath().getList("data", GetProductListResponse.class).size();
+        return response.jsonPath().getObject("data", GetProductListResponse.class).products().size();
+    }
+    private boolean 응답데이터_다음여부(ExtractableResponse<Response> response) {
+        return response.jsonPath().getObject("data", GetProductListResponse.class).hasNext();
     }
 
 }

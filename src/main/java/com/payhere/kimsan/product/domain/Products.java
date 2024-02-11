@@ -55,4 +55,12 @@ public class Products {
         Product matchProduct = getMatchProduct(product);
         productList.remove(matchProduct);
     }
+
+    public int getSize() {
+        return productList.size();
+    }
+
+    public List<Product> getList(int start, int end) {
+        return productList.subList(start, end);
+    }
 }

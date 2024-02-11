@@ -72,7 +72,7 @@ public class AuthService {
     }
 
     private void saveToken(String userId, String jwt) {
-        redisTemplate.opsForValue().set(userId, jwt, 60, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(userId, jwt, 24, TimeUnit.HOURS);
     }
 
     private void authenticateUser(SignInRequest request) {

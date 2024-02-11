@@ -8,6 +8,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class ProductAcceptanceTestSource {
 
@@ -86,12 +87,25 @@ public class ProductAcceptanceTestSource {
     }
 
 
-    public static ExtractableResponse<Response> 상품목록조회_요청(String token, Long page) {
+    public static ExtractableResponse<Response> 상품목록조회_요청(String token, HashMap<String, String> params) {
         ExtractableResponse<Response> response = RestAssured
             .given().log().all()
             .header("Authorization", token)
+            .params(params)
             .contentType(ContentType.JSON)
-            .when().get("/product/" + page)
+            .when().get("/product")
+            .then().log().all().extract();
+        return response;
+    }
+
+    public static HashMap 상품목록_파라미터생성(Long cursor, int page) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("cursor", String.valueOf(cursor));
+        params.put("page", String.valueOf(page));
+
+        return params;
+    }
+
             .then().log().all().extract();
         return response;
     }
