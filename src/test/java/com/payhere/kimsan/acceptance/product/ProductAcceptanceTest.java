@@ -91,6 +91,23 @@ class ProductAcceptanceTest {
         assertThat(응답데이터_다음여부(response)).isEqualTo(true);
     }
 
+    @Test
+    @DisplayName("상품 조회 테스트")
+    void success_product_find() {
+        // given
+        var createResponse = 상품등록_요청(token, 상품생성());
+        Long productId = getIdFromResponse(createResponse);
+
+        // when
+        final int page = 0;
+        var response = 상품조회_요청(token, productId);
+        Long responseId = getIdFromResponse(response);
+
+        // then
+        assertStatusCode(response, HttpStatus.OK);
+        assertThat(productId).isEqualTo(responseId);
+    }
+
     private int 응답데이터크기(ExtractableResponse<Response> response) {
         return response.jsonPath().getObject("data", GetProductListResponse.class).products().size();
     }

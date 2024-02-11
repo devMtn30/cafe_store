@@ -106,6 +106,12 @@ public class ProductAcceptanceTestSource {
         return params;
     }
 
+    public static ExtractableResponse<Response> 상품조회_요청(String token, Long productId) {
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .when().get("/product/" + productId)
             .then().log().all().extract();
         return response;
     }
