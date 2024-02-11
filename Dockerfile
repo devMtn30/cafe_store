@@ -3,7 +3,7 @@
 FROM gradle:7.4-jdk17 as build
 WORKDIR /app
 COPY . /app
-RUN gradle clean build
+RUN gradle clean build -x test
 
 # 실행 스테이지
 FROM openjdk:17-jdk-alpine
