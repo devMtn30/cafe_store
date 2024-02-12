@@ -22,6 +22,7 @@
 - Docker 실행
 - Project Root에 start_project.bat 파일 실행 
 - 이후 컨테이너가 전부 실행되면 프로젝트 실행
+- [POSTMAN] https://documenter.getpostman.com/view/28177093/2sA2r3aRYb
 
 <br>
 <hr>
