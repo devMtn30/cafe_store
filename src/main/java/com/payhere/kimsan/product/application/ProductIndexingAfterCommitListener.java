@@ -21,7 +21,6 @@ public class ProductIndexingAfterCommitListener implements TransactionSynchroniz
 
     @Override
     public void afterCommit() {
-        log.info("Indexing product after commit: {}", product);
         final String productName = product.getName();
 
         searchItemRepository.save(new SearchItem(product.getId(), product.getId(), productName, getAllJaum(productName)));
