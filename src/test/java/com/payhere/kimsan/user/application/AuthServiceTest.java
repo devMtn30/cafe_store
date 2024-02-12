@@ -1,9 +1,11 @@
 package com.payhere.kimsan.user.application;
 
+import com.payhere.kimsan.common.utils.LockManager;
 import com.payhere.kimsan.user.application.dto.SignInRequest;
 import com.payhere.kimsan.user.application.dto.SignUpRequest;
 import com.payhere.kimsan.user.domain.User;
 import java.util.Optional;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,6 +21,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -46,6 +50,9 @@ public class AuthServiceTest {
     @Mock
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Mock
+    private LockManager lockManager;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -53,10 +60,25 @@ public class AuthServiceTest {
 
     @Test
     public void testCreateUser() {
+        // Given
         SignUpRequest request = new SignUpRequest("123-4567-8901", "testPassword", "testName", "testRegNo");
+        User user = new User();
+
+        // Mocking doWithLock method
+        when(lockManager.doWithLock(anyString(), any(Supplier.class))).then(invocation -> {
+            // Simulate lockManager behavior
+            ((Supplier<?>) invocation.getArgument(1)).get();
+            return null;
+        });
+
+        when(userService.save(any(User.class))).thenReturn(user);
+
+        // When
         authService.createUser(request);
 
+        // Then
         verify(userService).save(any(User.class));
+        verify(lockManager).doWithLock(eq("123-4567-8901"), any(Supplier.class));
     }
 
     @Test
