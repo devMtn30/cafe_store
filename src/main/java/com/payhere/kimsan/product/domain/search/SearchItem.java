@@ -12,6 +12,9 @@ public class SearchItem {
     @Id
     private Long id;
 
+    @Field(type = FieldType.Long)
+    private Long productId;
+
     @Field(type = FieldType.Text)
     private String name;
 
