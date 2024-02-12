@@ -4,6 +4,7 @@ import static com.payhere.kimsan.common.config.EncryptConfig.encrypt;
 import static com.payhere.kimsan.common.exception.ErrorCode.DUPLICATED_ID;
 import static com.payhere.kimsan.common.exception.ErrorCode.INVALID_USER_INFO;
 
+import com.payhere.kimsan.common.LockManager;
 import com.payhere.kimsan.common.exception.CustomException;
 import com.payhere.kimsan.user.application.dto.JwtAuthenticationResponse;
 import com.payhere.kimsan.user.application.dto.SignInRequest;
@@ -33,12 +34,16 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final AesBytesEncryptor encryptor;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final LockManager lockManager;
 
     @Transactional
     public void createUser(SignUpRequest request) {
-        validateUser(request);
-        User user = getUser(request);
-        userService.save(user);
+        lockManager.doWithLock(request.userId(), () -> {
+            validateUser(request);
+            User user = getUser(request);
+            userService.save(user);
+            return null;
+        });
     }
 
     public JwtAuthenticationResponse signin(SignInRequest request) {
