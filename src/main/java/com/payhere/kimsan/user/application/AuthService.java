@@ -4,7 +4,7 @@ import static com.payhere.kimsan.common.config.EncryptConfig.encrypt;
 import static com.payhere.kimsan.common.exception.ErrorCode.DUPLICATED_ID;
 import static com.payhere.kimsan.common.exception.ErrorCode.INVALID_USER_INFO;
 
-import com.payhere.kimsan.common.LockManager;
+import com.payhere.kimsan.common.utils.LockManager;
 import com.payhere.kimsan.common.exception.CustomException;
 import com.payhere.kimsan.user.application.dto.JwtAuthenticationResponse;
 import com.payhere.kimsan.user.application.dto.SignInRequest;

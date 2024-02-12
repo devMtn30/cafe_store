@@ -58,6 +58,7 @@ public class ProductService {
         User user = getUser(userId);
         Product target = Product.builder().id(productId).build();
         user.removeProduct(target);
+        searchItemRepository.deleteByProductId(productId);
     }
     public List<Product> getUserProducts(String userId, int page) {
         User user = getUser(userId);

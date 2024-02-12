@@ -6,7 +6,6 @@ import com.payhere.kimsan.product.domain.search.SearchItem;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static com.payhere.kimsan.common.HangulUtils.getAllJaum;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 

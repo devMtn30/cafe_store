@@ -1,6 +1,6 @@
 package com.payhere.kimsan.product.application;
 
-import static com.payhere.kimsan.common.HangulUtils.getAllJaum;
+import static com.payhere.kimsan.common.utils.HangulUtils.getAllJaum;
 
 import com.payhere.kimsan.product.domain.Product;
 import com.payhere.kimsan.product.domain.search.SearchItemRepository;

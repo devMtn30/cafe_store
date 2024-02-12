@@ -1,4 +1,4 @@
-package com.payhere.kimsan.common;
+package com.payhere.kimsan.common.utils;
 
 import java.util.function.Supplier;
 import org.redisson.api.RLock;

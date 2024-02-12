@@ -1,4 +1,4 @@
-package com.payhere.kimsan.common;
+package com.payhere.kimsan.common.utils;
 
 public class HangulUtils {
     private static final String[] JAUM_SYLLABEL = new String[] { "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ", "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ" };
