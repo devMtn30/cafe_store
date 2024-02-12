@@ -13,7 +13,9 @@ import com.payhere.kimsan.product.application.dto.GetProductListResponse;
 import com.payhere.kimsan.product.application.dto.GetProductResponse;
 import com.payhere.kimsan.product.application.dto.ProductResponse;
 import com.payhere.kimsan.product.application.dto.UpdateProductRequest;
+import com.payhere.kimsan.product.domain.search.SearchItem;
 import com.payhere.kimsan.user.domain.CustomUserDetails;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -83,5 +85,10 @@ public class ProductController {
         GetProductResponse response = productService.findProduct(userId, productId);
 
         return new ResponseEntity<>(new CustomResponse<>(OK, response), OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<CustomResponse<List<SearchItem>>> searchProduct(@RequestParam String query) {
+        return new ResponseEntity<>(new CustomResponse<>(OK, productService.findByName(query)), OK);
     }
 }

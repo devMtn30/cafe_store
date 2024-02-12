@@ -1,6 +1,7 @@
 package com.payhere.kimsan.product.application;
 
 import static com.payhere.kimsan.common.exception.ErrorCode.INVALID_USER_INFO;
+import static org.springframework.transaction.support.TransactionSynchronizationManager.*;
 
 import com.payhere.kimsan.common.exception.CustomException;
 import com.payhere.kimsan.product.application.dto.AddProductRequest;
@@ -9,15 +10,15 @@ import com.payhere.kimsan.product.application.dto.GetProductResponse;
 import com.payhere.kimsan.product.application.dto.ProductResponse;
 import com.payhere.kimsan.product.application.dto.UpdateProductRequest;
 import com.payhere.kimsan.product.domain.Product;
+import com.payhere.kimsan.product.domain.search.SearchItem;
+import com.payhere.kimsan.product.domain.search.SearchItemRepository;
 import com.payhere.kimsan.product.domain.ProductRepository;
 import com.payhere.kimsan.user.domain.User;
 import com.payhere.kimsan.user.domain.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,12 +29,14 @@ public class ProductService {
 
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final SearchItemRepository searchItemRepository;
 
     public void saveProduct(final AddProductRequest request, final String userId) {
         final Product product = request.toEntity();
         User user = getUser(userId);
 
         user.addProduct(product);
+        productIndexing(product);
     }
 
     public void updateProduct(final UpdateProductRequest request, final String userId, final Long productId) {
@@ -41,6 +44,7 @@ public class ProductService {
         User user = getUser(userId);
 
         user.updateProduct(product);
+        productIndexing(user.findProduct(productId));
     }
 
     @Transactional(readOnly = true)
@@ -79,6 +83,12 @@ public class ProductService {
         return GetProductResponse.from(product);
     }
 
+    @Transactional(readOnly = true)
+    public List<SearchItem> findByName(final String name) {
+
+        return searchItemRepository.findByCustomQuery(name);
+    }
+
     private static List<GetProductResponse> getGetProductResponses(Slice<Product> productSlice) {
         return productSlice.getContent().stream()
                            .map(GetProductResponse::from)
@@ -88,5 +98,10 @@ public class ProductService {
     private User getUser(String userId) {
         return userRepository.findByUserId(userId)
                              .orElseThrow(() -> new CustomException(INVALID_USER_INFO));
+    }
+
+    private void productIndexing(Product product) {
+        registerSynchronization(new ProductIndexingAfterCommitListener(product,
+            searchItemRepository));
     }
 }

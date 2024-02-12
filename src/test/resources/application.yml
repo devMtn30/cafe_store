@@ -12,14 +12,18 @@ spring:
       uris: http://localhost:9200
   jpa:
     hibernate:
-      dialect: org.hibernate.dialect.MySQL5Dialect
+      dialect: org.hibernate.dialect.MySQL57Dialect
       ddl-auto: update
     show-sql: true
     open-in-view: false
+  data:
+    repositories:
+      enabled: true
 
 jwt:
   expiration_time: 86400000 # 24hours
   secret: 48a868a4042f634ac04a117f00a87202131dd7c46c4b32c4acb3edc5e15f4511
+
 encrypt:
   secret: 43jnhk43lkj530900akmqw9ea0ddqmlz9d9d8gg0da97d6z55a82u2sd4eq5n1salj
   salt: 70726574657374

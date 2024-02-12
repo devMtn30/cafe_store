@@ -1,41 +1,31 @@
+
+#docker-compose.yml
 version: '3'
 services:
   db:
     image: mysql:5.7
+    container_name: db
     environment:
       MYSQL_ROOT_PASSWORD: example
       MYSQL_DATABASE: test
     ports:
       - "3306:3306"
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
   redis:
+    container_name: redis
     image: redis
     ports:
       - "6379:6379"
   elasticsearch:
+    container_name: elasticsearch
     build:
       context: ./elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
+      - cluster.name=elasticsearch
     ports:
       - "9200:9200"
       - "9300:9300"
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/test?useSSL=false
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: example
-      SPRING_ELASTICSEARCH_REST_URIS: http://elasticsearch:9200
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - redis
-      - elasticsearch
