@@ -98,6 +98,17 @@ public class ProductAcceptanceTestSource {
         return response;
     }
 
+    public static ExtractableResponse<Response> 상품이름기반검색_요청(String token, String query) {
+        ExtractableResponse<Response> response = RestAssured
+            .given().log().all()
+            .header("Authorization", token)
+            .param("query", query)
+            .contentType(ContentType.JSON)
+            .when().get("/product/search")
+            .then().log().all().extract();
+        return response;
+    }
+
     public static HashMap 상품목록_파라미터생성(Long cursor, int page) {
         HashMap<String, String> params = new HashMap<>();
         params.put("cursor", String.valueOf(cursor));

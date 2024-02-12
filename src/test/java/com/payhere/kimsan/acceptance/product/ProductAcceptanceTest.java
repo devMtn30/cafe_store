@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 
 @DisplayName("상품 관련 테스트")
@@ -106,6 +108,34 @@ class ProductAcceptanceTest {
         // then
         assertStatusCode(response, HttpStatus.OK);
         assertThat(productId).isEqualTo(responseId);
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+        "슈크림",
+        "크림",
+        "라떼",
+        "ㄹㄸ",
+        "ㅅㅋㄹ"
+    })
+    @DisplayName("상품 이름 기반 검색 테스트")
+    void success_product_searchByName(final String 검색어) {
+        // given
+        final String 상품명 = "슈크림 라떼";
+        var createResponse = 상품등록_요청(token, 상품생성(상품명));
+        final Long productId = getIdFromResponse(createResponse);
+
+        // when
+        var response = 상품이름기반검색_요청(token, 검색어);
+        final String 응답_상품명 = 응답상품명_찾기(response);
+
+        // then
+        assertStatusCode(response, HttpStatus.OK);
+        assertThat(응답_상품명).isEqualTo(상품명);
+    }
+
+    private static String 응답상품명_찾기(ExtractableResponse<Response> response) {
+        return response.jsonPath().getString("data[0].name");
     }
 
     private int 응답데이터크기(ExtractableResponse<Response> response) {
