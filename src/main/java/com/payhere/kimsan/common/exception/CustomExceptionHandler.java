@@ -14,7 +14,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(CustomException.class)
     protected ResponseEntity<CustomResponse<Object>> handleCustomException(CustomException e) {
         CustomResponse<Object> response = new CustomResponse<>();
-        response.setMeta(e.getErrorCode().getHttpStatus(), e.getMessage());
+        response.setMeta(e.getErrorCode().getHttpStatus(), e.getErrorCode().getMessage());
         response.setData(null);
 
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getHttpStatus().value()));
